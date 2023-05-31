@@ -33,6 +33,6 @@ Raffel, C.; Shazeer, N.; Roberts, A.; Lee, K.; Narang, S.; Matena, M.; Zhou, Y.;
 P.J.: Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer. 
 In: The Journal of Machine Learning Research 21,140:1–140:67.(2020)
 
-<a id="3">[ABHT23]</a>
+<a id="3">[3]</a>
 Aguerrebere, C.; Bhati I.; Hildebrand M.; Tepper M.; Willke T.:Similarity search in the blink of an eye with compressed
 indices. In: arXiv preprint [arXiv:2304.04759](https://arxiv.org/abs/2304.04759) (2023)
