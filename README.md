@@ -8,8 +8,6 @@ With the dense passage retriever (DPR) [[1]](#1), we encode text snippets from t
 The number of base and query embedding vectors is parametrizable. In [[3]](#3), 10 million base vectors and 10,000 query vectors are used.
 
 ## References
-
-## References
 Reference to cite when you use datasets generated with this code in a research paper:
 
 ```
@@ -36,3 +34,8 @@ In: The Journal of Machine Learning Research 21,140:1–140:67.(2020)
 <a id="3">[3]</a>
 Aguerrebere, C.; Bhati I.; Hildebrand M.; Tepper M.; Willke T.:Similarity search in the blink of an eye with compressed
 indices. In: arXiv preprint [arXiv:2304.04759](https://arxiv.org/abs/2304.04759) (2023)
+
+
+This "research quality code"  is for Non-Commercial purposes provided by Intel "As Is" without any express or implied 
+warranty of any kind. Please see the dataset's applicable license for terms and conditions. Intel does not own the 
+rights to this data set and does not confer any rights to it. Intel does not warrant or assume responsibility for the accuracy or completeness of any information, text, graphics, links or other items within the code. A thorough security review has not been performed on this code. Additionally, this repository may contain components that are out of date or contain known security vulnerabilities.
