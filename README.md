@@ -49,7 +49,8 @@ generate_dpr_embeddings(init_file, num_of_files, num_embd, doc_stride, max_lengt
    We provide the [ground-truth](gtruth_dpr10M_innerProduct.ivecs) for the dataset generated using 
    [dpr_dataset_10M.py](dpr_dataset_10M.py).
    
-
+> **_NOTE:_**  Due to floating-point arithmetic precision the vector embeddings generated using the provided
+> code in different machines may slightly vary. Keep in mind that this could cause small discrepancies with the provided ground-truth.  
 
 ## References
 Reference to cite when you use datasets generated with this code in a research paper:
