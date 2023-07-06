@@ -24,6 +24,8 @@ we used the first 20 files (i.e., files `c4-train.00000-of-01024.json.gz` to `c4
 ```
 # Example code to generate base vectors
 
+from dpr_dataset_generate import generate_dpr_embeddings
+
 base_C4_folder = '/home/username/research/datasets/c4/en'  # Set this path to where your c4/en folder is located
 cache_folder = f'/home/username/.cache/huggingface/datasets/'  # Set to the hugginface datasets cache path
 dataset_dir = f'{base_C4_folder}/train/'
@@ -45,12 +47,14 @@ generate_dpr_embeddings(init_file, num_of_files, num_embd, doc_stride, max_lengt
                      batch_size,
                      dataset_dir, fname_prefix_out, cache_folder)
 ```
-3. Generate the ground-truth by conducting an exhaustive search with the inner product metric. 
+3. **Generate the ground-truth** by conducting an exhaustive search with the inner product metric. 
    We provide the [ground-truth](gtruth_dpr10M_innerProduct.ivecs) for the dataset generated using 
    [dpr_dataset_10M.py](dpr_dataset_10M.py).
    
 > **_NOTE:_**  Due to floating-point arithmetic precision the vector embeddings generated using the provided
 > code in different machines may slightly vary. Keep in mind that this could cause small discrepancies with the provided ground-truth.  
+
+4. Functions `read_fvecs` and `read_ivecs` can be used to read `.fvecs` and `.ivecs` files respectively.
 
 ## References
 Reference to cite when you use datasets generated with this code in a research paper:

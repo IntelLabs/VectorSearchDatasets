@@ -331,27 +331,15 @@ def generate_dpr_embeddings(init_file: int, number_of_files: int, num_embd: int,
             pickle.dump(total_embeds_per_file, f)
 
 
-def ivecs_read(fname):
-    a = np.fromfile(fname, dtype='int32')
-    d = a[0]
-    return a.reshape(-1, d + 1)[:, 1:].copy()
+def read_ivecs(fname: str):
+    x = np.fromfile(fname, dtype='int32')
+    d = x[0]
+    y = x.reshape(-1, d + 1)[:, 1:].copy()
+    return y
 
 
-def fvecs_read(fname):
-    return ivecs_read(fname).view('float32')
-
-
-def fvecs_write(fname, m):
-    m = m.astype('float32')
-    ivecs_write(fname, m.view('int32'))
-
-
-def ivecs_write(fname, m):
-    n, d = m.shape
-    m1 = np.empty((n, d + 1), dtype='int32')
-    m1[:, 0] = d
-    m1[:, 1:] = m
-    m1.tofile(fname)
+def read_fvecs(fname: str):
+    return read_ivecs(fname).view('float32')
 
 
 def fvecs_write_from_mmap(fname: str, m: npt.ArrayLike):
