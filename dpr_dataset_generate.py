@@ -7,7 +7,7 @@ import os, shutil
 import gzip
 from datasets import load_dataset
 # the files used/created by pickle are temporary and don't pose any security issue
-import pickle #nosec
+import pickle  # nosec
 import random
 import numpy as np
 import numpy.typing as npt
@@ -42,22 +42,26 @@ def tokenize_texts(ctx_tokenizer: AutoTokenizer, texts: list, max_length: Option
 
     n_seq = len(encoded_inputs['input_ids'])
     if save_sentences:
-        # Code to generate sentences from tokens
-        sentences = []
-        for i in range(n_seq):
-            if not (i % 100000):
-                print('Processing sentence', i, 'of', n_seq)
-            sentences += [' '.join(encoded_inputs.tokens(i))]
+        if fname_sentences is not None:
+            # Code to generate sentences from tokens
+            sentences = []
+            for i in range(n_seq):
+                if not (i % 100000):
+                    print('Processing sentence', i, 'of', n_seq)
+                sentences += [' '.join(encoded_inputs.tokens(i))]
 
-        with open(fname_sentences, 'wb') as f:
-            pickle.dump(sentences, f)
-        del sentences
+            with open(fname_sentences, 'wb') as f:
+                pickle.dump(sentences, f)
+            del sentences
+        else:
+            raise BaseException(
+                'tokenize_texts: The filename where the original sentences will be saved was not specified.')
 
     return encoded_inputs
 
 
 def generate_embeddings(model: Union[DPRContextEncoder, DPRQuestionEncoder], encoded_input: BatchEncoding, dim: int,
-                        batch_size: int, fname_mmap: str) -> np.memmap:
+                        batch_size: int, fname_mmap: str, device: str) -> np.memmap:
     n_seq = len(encoded_input['input_ids'])
     token_embeddings_out = np.memmap(fname_mmap, dtype='float32', \
                                      mode='w+', shape=(n_seq, dim))
@@ -68,9 +72,10 @@ def generate_embeddings(model: Union[DPRContextEncoder, DPRQuestionEncoder], enc
 
     num_batches = int(np.ceil(float(n_seq) / batch_size))
     batch_print = 100
-    start1 = torch.cuda.Event(enable_timing=True)
-    end1 = torch.cuda.Event(enable_timing=True)
-    start1.record()
+    if device != "cpu":
+        start1 = torch.cuda.Event(enable_timing=True)
+        end1 = torch.cuda.Event(enable_timing=True)
+        start1.record()
     with torch.no_grad():
         for batch in range(num_batches):
 
@@ -85,10 +90,10 @@ def generate_embeddings(model: Union[DPRContextEncoder, DPRQuestionEncoder], enc
 
             if not (batch % batch_print):
                 print('Doing inference for batch', batch, 'of', num_batches)
-
-    end1.record()
-    torch.cuda.synchronize()
-    print(f'Inference for {n_seq}, sequences took {(start1.elapsed_time(end1) / 1000):.2f} s')
+    if device != "cpu":
+        end1.record()
+        torch.cuda.synchronize()
+        print(f'Inference for {n_seq}, sequences took {(start1.elapsed_time(end1) / 1000):.2f} s')
 
     return token_embeddings_out
 
@@ -133,59 +138,61 @@ def get_tokenized_seqs_total_for_contexts(contexts: list, ctx_tokenizer: AutoTok
     return len(encoded_contexts['input_ids'])
 
 
-def fvecs_write_from_mmap(fname: str, m: npt.ArrayLike):
-    n, d = m.shape
-    m1 = np.memmap(fname, dtype='int32', mode='w+', shape=(n, d + 1))
-    m1[:, 0] = d
-    m1[:, 1:] = m.view('int32')
+def generate_dpr_embeddings(init_file: int, number_of_files: int, num_embd: int, doc_stride: int, max_length: int,
+                         dim: int, batch_size: int,
+                         dataset_dir: str, fname_prefix_out: str, cache_folder_hugg: str,
+                         generate_queries: Optional[bool] = False,
+                         questionRequired: Optional[bool] = True, get_total_embeddings_only: Optional[bool] = False,
+                         save_sentences: Optional[bool] = False):
+    """Generate DPR embeddings from text snippets of the C4 dataset and save them in .fvecs format.
 
+    Keyword arguments:
+    init_file -- Use the init_file and number_of_files parameters to determine the range of files to extract the text snippets
+                from. For example, when generating base vectors, init_file=5 and number_of_files=10 will process files
+                c4-train.00005-of-01024.json.gz to c4-train.00014-of-01024.json.gz from the C4/en dataset.
+    number_of_files -- See description for init_file. If the input files do not contain enough text snippets to generate the
+                requested number of embeddings a warning will be printed and the .fvecs file will be saved with the
+                generated embeddings. Add more files if more embeddings are needed.
+    num_embd -- Number of vector embeddings to generate.
+    doc_stride -- stride parameter for the tokenizer, it defines the overlap between extracted sequences.
+    max_length -- max_length parameter for the tokenizer, it defines the maximum length of extracted sequences.
+    dim -- Dimensionality of the generated embeddings, it is defined by the model.
+    batch_size -- Batch size used at inference time to generate the embeddings.
+    dataset_dir -- Path to the location of the c4/en dataset.
+    fname_prefix_out -- Prefix used for the names of the files where the embeddings are saved, both temporarily (.mmap)
+                        and the final output .fvecs file. In order to handle a large number of embeddings without
+                        running out of memory, the embeddings are memory mapped to a temporal file while being generated.
+                        Once the complete process is finished, the memory mapped file is saved to a .fvecs file and the
+                        temporal .mmap file is deleted.
+    cache_folder -- Path to the huggingface cache folder.
+    generate_queries -- Optional; Set to True to generate queries with the query encoder
+                        (dpr-question_encoder-single-nq-base). Otherwise, the base vectors are generated with the
+                        context encoder (dpr-ctx_encoder-single-nq-base).
+    questionRequired -- Optional; If set to True, sentences with question marks are prioritized during query generation.
+    get_total_embeddings_only -- Optional; Used to get the number of embeddings that can be generated from a file.
+                                The embeddings are NOT generated if set to True.
+    save_sentences -- Optional; Set to True to save the original sentences associated to each embedding to a pickle file.
+                      Useful for analysis purposes, e.g., to assess the semantic relevance of approximate nearest
+                      neighbors results.
+    """
 
-if __name__ == "__main__":
-    doc_stride = 32  # doc_stride: stride parameter for the tokenizer, it defines the overlap
-    #             between extracted sequences
-    max_length = 64  # max_length: max_length parameter for the tokenizer, it defines the maximum
-    #             length of extracted sequences
-    dim = 768  # dim: Dimensionality of the generated embeddings, it is defined by the model
-    num_embd = 10000000  # num_embd: Number of embeddings to generate
-    generate_queries = False  # generate_queries: Set to True to generate queries with the query encoder
-    #                   (dpr-question_encoder-single-nq-base). Otherwise, the
-    #                   base vectors are generated with the context encoder
-    #                   (dpr-ctx_encoder-single-nq-base)
-    questionRequired = True  # questionRequired: If set to True, sentences with question marks are
-    #                   prioritized during query generation.
-    get_total_embeddings_only = False  # get_total_embeddings_only: Used to get the number of embeddings that
-    #                            can be generated from a file. The embeddings are
-    #                            NOT generated if set to True.
-    init_file = int(sys.argv[1])  # Use init_file and end_file parameters to determine the range of files to
-    # extract text from. For example, init_file=0, end_file=10 will process
-    end_file = int(sys.argv[2])  # input files c4-train.00000-of-01024.json.gz to
-    # c4-train.00010-of-01024.json.gz from the C4/en dataset.
+    end_file = init_file + number_of_files
+    cache_folder = f'{cache_folder_hugg}/files{init_file}_{end_file}'
 
-    np.random.seed(0)
-    random.seed(0)
-
-    cache_folder = f'/home/username/.cache/huggingface/datasets/files{init_file}_{end_file}'
     if not os.path.exists(cache_folder):
         os.makedirs(cache_folder)
 
-    fname_prefix_out = 'c4-en'
     if generate_queries:
-        dataset_dir = '/home/username/research/datasets/c4/en/validation/'
         fname_prefix = 'c4-validation.'
         total_files = 8
     else:
-        dataset_dir = '/home/username/research/datasets/c4/en/train/'
         fname_prefix = 'c4-train.'
         total_files = 1024
 
     if generate_queries:
-        batch_size = 256
-        save_sentences = True
         fname_mmap = f'{dataset_dir}/embeddings/{fname_prefix_out}_queries_{int(num_embd / 1000)}k_files{init_file}_{end_file}.mmap'
         fname_fvecs = f'{dataset_dir}/embeddings/{fname_prefix_out}_queries_{int(num_embd / 1000)}k_files{init_file}_{end_file}.fvecs'
     else:
-        batch_size = 512
-        save_sentences = False
         fname_mmap = f'{dataset_dir}/embeddings/{fname_prefix_out}_base_{int(num_embd / 1000000)}M_files{init_file}_{end_file}.mmap'
         fname_fvecs = f'{dataset_dir}/embeddings/{fname_prefix_out}_base_{int(num_embd / 1000000)}M_files{init_file}_{end_file}.fvecs'
         fname_tokens_total = f'{dataset_dir}/total_embeddings_list_files{init_file}_{end_file}.pkl'
@@ -261,7 +268,8 @@ if __name__ == "__main__":
                 encoded_queries = tokenize_texts(q_tokenizer, queries, text_type=text_type, \
                                                  save_sentences=save_sentences, fname_sentences=fname_sentences_query)
                 print('Generating embeddings for queries.')
-                embeddings_batch = generate_embeddings(q_encoder, encoded_queries, dim, batch_size, fname_mmap_aux)
+                embeddings_batch = generate_embeddings(q_encoder, encoded_queries, dim, batch_size, fname_mmap_aux,
+                                                       device)
                 del encoded_queries
 
             else:
@@ -273,7 +281,8 @@ if __name__ == "__main__":
                 encoded_contexts = tokenize_texts(ctx_tokenizer, contexts, max_length, doc_stride=doc_stride, \
                                                   text_type=text_type, save_sentences=save_sentences)
                 print('Generating embeddings for contexts.')
-                embeddings_batch = generate_embeddings(ctx_encoder, encoded_contexts, dim, batch_size, fname_mmap_aux)
+                embeddings_batch = generate_embeddings(ctx_encoder, encoded_contexts, dim, batch_size, fname_mmap_aux,
+                                                       device)
                 del encoded_contexts
 
             curr_total_emb += embeddings_batch.shape[0]
@@ -304,8 +313,13 @@ if __name__ == "__main__":
         file_id += 1
 
     # Save mmap file to fvecs format, keeping only the valid embeddings
-    print('Saving embeddings to .fvecs format.')
+    if curr_total_emb < num_embd:
+        print(f'WARNING: the input files did not contain enough text snippets to generate {num_embd} embeddings. '
+              f'Only {curr_total_emb} embeddings were generated. Add more input files to achieve the required number of'
+              f' embeddings!')
+    print(f'Saving {curr_total_emb} embeddings to {fname_fvecs}.')
     fvecs_write_from_mmap(fname_fvecs, embeddings[:curr_total_emb])
+
 
     print('Deleting auxiliary mmaps.')
     os.remove(fname_mmap)
@@ -315,3 +329,33 @@ if __name__ == "__main__":
         print('There are a total of', total_tokens, 'to be extrated from all files.')
         with open(fname_tokens_total, 'wb') as f:
             pickle.dump(total_embeds_per_file, f)
+
+
+def ivecs_read(fname):
+    a = np.fromfile(fname, dtype='int32')
+    d = a[0]
+    return a.reshape(-1, d + 1)[:, 1:].copy()
+
+
+def fvecs_read(fname):
+    return ivecs_read(fname).view('float32')
+
+
+def fvecs_write(fname, m):
+    m = m.astype('float32')
+    ivecs_write(fname, m.view('int32'))
+
+
+def ivecs_write(fname, m):
+    n, d = m.shape
+    m1 = np.empty((n, d + 1), dtype='int32')
+    m1[:, 0] = d
+    m1[:, 1:] = m
+    m1.tofile(fname)
+
+
+def fvecs_write_from_mmap(fname: str, m: npt.ArrayLike):
+    n, d = m.shape
+    m1 = np.memmap(fname, dtype='int32', mode='w+', shape=(n, d + 1))
+    m1[:, 0] = d
+    m1[:, 1:] = m.view('int32')

@@ -5,7 +5,51 @@ With the dense passage retriever (DPR) [[1]](#1), we encode text snippets from t
 - context DPR embeddings for the base set and
 - question DPR embeddings for the query set. 
 
-The number of base and query embedding vectors is parametrizable. In [[3]](#3), 10 million base vectors and 10,000 query vectors are used.
+The number of base and query embedding vectors is parametrizable. In [[3]](#3), 10 million base vectors and 10,000 query 
+vectors are used. Use the script [dpr_dataset_10M.py](dpr_dataset_10M.py) to generate this dataset. The corresponding ground-truth 
+(available [here](gtruth_dpr10M_innerProduct.ivecs)) is generated conducting an exhaustive search with the inner product 
+metric.
+
+Here is a summary of the steps to generate the dataset:
+
+1. **Download the files** corresponding to the `en` variant of the C4 dataset accesible [here](https://huggingface.co/datasets/allenai/c4). 
+The complete set (1024 files) requires 350GB of storage, so you might want to follow the instructions to download only a subset. For example, to generate 10M embeddings
+we used the first 20 files (i.e., files `c4-train.00000-of-01024.json.gz` to `c4-train.00020-of-01024.json.gz`).
+   
+2. **Execute** the `generate_dpr_embeddings` function to generate a `.fvecs` file containing the new embeddings. 
+   Note that different settings should be used to generate the **base vectors** and the **query set**, as they use the 
+   DPR context and query encoders respectively. 
+   See the script [dpr_dataset_10M.py](dpr_dataset_10M.py) for details.
+
+```
+# Example code to generate base vectors
+
+base_C4_folder = '/home/username/research/datasets/c4/en'  # Set this path to where your c4/en folder is located
+cache_folder = f'/home/username/.cache/huggingface/datasets/'  # Set to the hugginface datasets cache path
+dataset_dir = f'{base_C4_folder}/train/'
+
+num_embd = 10000000
+init_file = 0
+num_of_files = 20  # Make sure the input files (20 in this case) are enough to generate the requested number 
+                      # of embeddings. 
+                      # To get an estimate, use the optional parameter get_total_embeddings_only 
+                      # to get the number of embeddings that can be generated from a certain group of files 
+                      # without actually generating the embeddings.
+fname_prefix_out = 'c4-en'
+doc_stride = 32
+max_length = 64
+batch_size = 512
+dim = 768
+
+generate_dpr_embeddings(init_file, num_of_files, num_embd, doc_stride, max_length, dim,
+                     batch_size,
+                     dataset_dir, fname_prefix_out, cache_folder)
+```
+3. Generate the ground-truth by conducting an exhaustive search with the inner product metric. 
+   We provide the [ground-truth](gtruth_dpr10M_innerProduct.ivecs) for the dataset generated using 
+   [dpr_dataset_10M.py](dpr_dataset_10M.py).
+   
+
 
 ## References
 Reference to cite when you use datasets generated with this code in a research paper:
