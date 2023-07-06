@@ -3,14 +3,18 @@
 This repository provides code to generate base and query vector datasets for similarity search benchmarking and evaluation on high-dimensional vectors stemming from large language models.
 With the dense passage retriever (DPR) [[1]](#1), we encode text snippets from the C4 dataset [[2]](#2) to generate 768-dimensional vectors:
 - context DPR embeddings for the base set and
-- question DPR embeddings for the query set. 
+- question DPR embeddings for the query set.
 
-The number of base and query embedding vectors is parametrizable. In [[3]](#3), 10 million base vectors and 10,000 query 
-vectors are used. Use the script [dpr_dataset_10M.py](dpr_dataset_10M.py) to generate this dataset. The corresponding ground-truth 
-(available [here](gtruth_dpr10M_innerProduct.ivecs)) is generated conducting an exhaustive search with the inner product 
+The metric for similarity search is inner product [[1]](#1). 
+
+The number of base and query embedding vectors is parametrizable.
+
+## DPR10M
+
+A specific isntance with 10 million base vectors and 10,000 query vectors is introduced in [[3]](#3). Use the script [dpr_dataset_10M.py](dpr_dataset_10M.py) to generate this dataset. The corresponding ground-truth (available [here](gtruth_dpr10M_innerProduct.ivecs)) is generated conducting an exhaustive search with the inner product 
 metric.
 
-Here is a summary of the **steps to generate the dataset**:
+Here is a summary of the **steps to generate this dataset**:
 
 1. **Download the files** corresponding to the `en` variant of the C4 dataset accesible [here](https://huggingface.co/datasets/allenai/c4). 
 The complete set of files requires 350GB of storage, so you might want to follow the instructions to download only a subset. For example, to generate 10M embeddings
@@ -44,8 +48,8 @@ batch_size = 512
 dim = 768
 
 generate_dpr_embeddings(init_file, num_of_files, num_embd, doc_stride, max_length, dim,
-                     batch_size,
-                     dataset_dir, fname_prefix_out, cache_folder)
+                        batch_size,
+                        dataset_dir, fname_prefix_out, cache_folder)
 ```
 3. **Generate the ground-truth** by conducting an exhaustive search with the inner product metric. 
    We provide the [ground-truth](gtruth_dpr10M_innerProduct.ivecs) for the dataset generated using 
