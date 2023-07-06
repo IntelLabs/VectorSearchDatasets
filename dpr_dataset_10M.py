@@ -11,7 +11,7 @@ if __name__ == "__main__":
     #
     # The dataset was generated using text snippets from the files in the "en" (305GB) variant of the C4 dataset
     # available at: https://huggingface.co/datasets/allenai/c4
-    # We used files c4-train.00000-of-01024.json.gz to c4-train.00019-of-01024.json.gz in the train folder (c4/en/train)
+    # We used files c4-train.00000-of-01024.json.gz and c4-train.00001-of-01024.json.gz in the train folder (c4/en/train)
     # to generate the base vectors, and file c4-validation.00000-of-00008.json in the validation folder
     # (c4/en/validation/) to generate the queries.
     #
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     num_embd = 10000000
     batch_size = 512
     init_file = 0
-    number_of_files = 20  # Make sure the input files (20 in this case) are enough to generate the requested number of embeddings.
+    number_of_files = 2  # Make sure the input files (2 in this case) are enough to generate the requested number of embeddings.
                           # For a fast estimate, use the optional parameter get_total_embeddings_only to get the number
                           # of embeddings that can be generated from a certain group of files without actually generating
                           # the embeddings.

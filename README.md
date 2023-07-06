@@ -14,7 +14,7 @@ Here is a summary of the **steps to generate the dataset**:
 
 1. **Download the files** corresponding to the `en` variant of the C4 dataset accesible [here](https://huggingface.co/datasets/allenai/c4). 
 The complete set (1024 files) requires 350GB of storage, so you might want to follow the instructions to download only a subset. For example, to generate 10M embeddings
-we used the first 20 files (i.e., files `c4-train.00000-of-01024.json.gz` to `c4-train.00019-of-01024.json.gz`).
+we used the first 2 files (i.e., files `c4-train.00000-of-01024.json.gz` and `c4-train.00001-of-01024.json.gz`).
    
 2. **Execute** the `generate_dpr_embeddings` function to generate a `.fvecs` file containing the new embeddings. 
    Note that different settings should be used to generate the **base vectors** and the **query set**, as they use the 
@@ -32,11 +32,11 @@ dataset_dir = f'{base_C4_folder}/train/'
 
 num_embd = 10000000
 init_file = 0
-num_of_files = 20  # Make sure the input files (20 in this case) are enough to generate the requested number 
-                      # of embeddings. 
-                      # To get an estimate, use the optional parameter get_total_embeddings_only 
-                      # to get the number of embeddings that can be generated from a certain group of files 
-                      # without actually generating the embeddings.
+num_of_files = 2  # Make sure the input files (2 in this case) are enough to generate the 
+                  # requested number  of embeddings. 
+                  # To get an estimate, use the optional parameter get_total_embeddings_only 
+                  # to get the number of embeddings that can be generated from a certain 
+                  # group of files without actually generating the embeddings.
 fname_prefix_out = 'c4-en'
 doc_stride = 32
 max_length = 64
