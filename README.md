@@ -13,8 +13,8 @@ metric.
 Here is a summary of the **steps to generate the dataset**:
 
 1. **Download the files** corresponding to the `en` variant of the C4 dataset accesible [here](https://huggingface.co/datasets/allenai/c4). 
-The complete set (1024 files) requires 350GB of storage, so you might want to follow the instructions to download only a subset. For example, to generate 10M embeddings
-we used the first 2 files (i.e., files `c4-train.00000-of-01024.json.gz` and `c4-train.00001-of-01024.json.gz`).
+The complete set of files requires 350GB of storage, so you might want to follow the instructions to download only a subset. For example, to generate 10M embeddings
+we used the first 2 files from the train set (i.e., files `c4-train.00000-of-01024.json.gz` and `c4-train.00001-of-01024.json.gz` in `c4/en/train`).
    
 2. **Execute** the `generate_dpr_embeddings` function to generate a `.fvecs` file containing the new embeddings. 
    Note that different settings should be used to generate the **base vectors** and the **query set**, as they use the 
