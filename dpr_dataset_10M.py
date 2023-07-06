@@ -11,7 +11,7 @@ if __name__ == "__main__":
     #
     # The dataset was generated using text snippets from the files in the "en" (305GB) variant of the C4 dataset
     # available at: https://huggingface.co/datasets/allenai/c4
-    # We used files c4-train.00000-of-01024.json.gz to c4-train.00020-of-01024.json.gz in the train folder (c4/en/train)
+    # We used files c4-train.00000-of-01024.json.gz to c4-train.00019-of-01024.json.gz in the train folder (c4/en/train)
     # to generate the base vectors, and file c4-validation.00000-of-00008.json in the validation folder
     # (c4/en/validation/) to generate the queries.
     #
