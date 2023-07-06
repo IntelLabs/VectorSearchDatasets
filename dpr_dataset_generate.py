@@ -312,21 +312,22 @@ def generate_dpr_embeddings(init_file: int, number_of_files: int, num_embd: int,
 
         file_id += 1
 
-    # Save mmap file to fvecs format, keeping only the valid embeddings
-    if curr_total_emb < num_embd:
-        print(f'WARNING: the input files did not contain enough text snippets to generate {num_embd} embeddings. '
-              f'Only {curr_total_emb} embeddings were generated. Add more input files to achieve the required number of'
-              f' embeddings!')
-    print(f'Saving {curr_total_emb} embeddings to {fname_fvecs}.')
-    fvecs_write_from_mmap(fname_fvecs, embeddings[:curr_total_emb])
+    if not get_total_embeddings_only:
+        # Save mmap file to fvecs format, keeping only the valid embeddings
+        if curr_total_emb < num_embd:
+            print(f'WARNING: the input files did not contain enough text snippets to generate {num_embd} embeddings. '
+                  f'Only {curr_total_emb} embeddings were generated. Add more input files to achieve the required number of'
+                  f' embeddings!')
+        print(f'Saving {curr_total_emb} embeddings to {fname_fvecs}.')
+        fvecs_write_from_mmap(fname_fvecs, embeddings[:curr_total_emb])
 
 
-    print('Deleting auxiliary mmaps.')
-    os.remove(fname_mmap)
-    os.remove(fname_mmap_aux)
+        print('Deleting auxiliary mmaps.')
+        os.remove(fname_mmap)
+        os.remove(fname_mmap_aux)
 
-    if get_total_embeddings_only:
-        print('There are a total of', total_tokens, 'to be extrated from all files.')
+    else:
+        print('There are a total of', total_tokens, 'to be extrated from the requested files.')
         with open(fname_tokens_total, 'wb') as f:
             pickle.dump(total_embeds_per_file, f)
 
