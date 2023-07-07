@@ -1,4 +1,4 @@
-transformers==4.29.2
+transformers==4.30.0
 torch==2.0.1
 datasets==2.13.1
 numpy==1.25.0
