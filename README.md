@@ -11,7 +11,7 @@ The number of base and query embedding vectors is parametrizable.
 
 ## DPR10M
 
-A specific isntance with 10 million base vectors and 10,000 query vectors is introduced in [[3]](#3). Use the script [dpr_dataset_10M.py](dpr_dataset_10M.py) to generate this dataset. The corresponding ground-truth (available [here](gtruth_dpr10M_innerProduct.ivecs)) is generated conducting an exhaustive search with the inner product 
+A specific instance with 10 million base vectors and 10,000 query vectors is introduced in [[3]](#3). Use the script [dpr_dataset_10M.py](dpr_dataset_10M.py) to generate this dataset. The corresponding ground-truth (available [here](gtruth_dpr10M_innerProduct.ivecs)) is generated conducting an exhaustive search with the inner product 
 metric.
 
 Here is a summary of the **steps to generate this dataset**:
@@ -64,13 +64,14 @@ generate_dpr_embeddings(init_file, num_of_files, num_embd, doc_stride, max_lengt
 Reference to cite when you use datasets generated with this code in a research paper:
 
 ```
-@misc{aguerrebere2023similarity,
-title={Similarity search in the blink of an eye with compressed indices},
-author={Cecilia Aguerrebere and Ishwar Bhati and Mark Hildebrand and Mariano Tepper and Ted Willke},
-year={2023},
-eprint={2304.04759},
-archivePrefix={arXiv},
-primaryClass={cs.LG}
+@article{aguerrebere2023similarity,
+        title={Similarity search in the blink of an eye with compressed indices},
+        volume = {16},
+        number = {11},    
+        pages = {3433--3446},    
+        journal = {Proceedings of the VLDB Endowment},
+        author={Cecilia Aguerrebere and Ishwar Bhati and Mark Hildebrand and Mariano Tepper and Ted Willke},        
+        year = {2023}
 }
 ```
 
@@ -86,8 +87,7 @@ In: The Journal of Machine Learning Research 21,140:1–140:67.(2020)
 
 <a id="3">[3]</a>
 Aguerrebere, C.; Bhati I.; Hildebrand M.; Tepper M.; Willke T.:Similarity search in the blink of an eye with compressed
-indices. In: arXiv preprint [arXiv:2304.04759](https://arxiv.org/abs/2304.04759) (2023)
-
+indices. In: Proceedings of the VLDB Endowment, 16, 11, 3433 - 3446. (2023)
 
 This "research quality code"  is for Non-Commercial purposes provided by Intel "As Is" without any express or implied 
 warranty of any kind. Please see the dataset's applicable license for terms and conditions. Intel does not own the 
