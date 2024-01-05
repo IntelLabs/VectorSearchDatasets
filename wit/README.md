@@ -1,15 +1,15 @@
 # wit-512-1M Dataset Generator
 
-This repository provides code to generate base query (test and learn sets) embeddings for similarity search benchmarking
+This repository provides code to generate base and query (test and learn sets) embeddings for similarity search benchmarking
 and evaluation on high-dimensional vectors. The dataset is designed to benchmark similarity search methods under
 scenarios with out-of-distribution (OOD) queries stemming from a text-to-image application [[1]](#1).
 
 The WIT dataset[[2]](#2) is a multimodal multilingual dataset that contains 37 million rich image-text examples
-extracted from Wikipedia pages. For each example in the first million training images 
+extracted from Wikipedia pages. For each example in the first million training images
 (downloaded from [here](https://storage.cloud.google.com/wikimedia-image-caption-public/image_data_train.tar)), we take the image and encode it
 using the multimodal OpenAI CLIP-ViT-B32 model [[3]](#3) to generate a database vector.
 We create the query set using the first 20K text descriptions in one of the provided test sets (concatenating
-the Reference and Attribution description fields) and generating the corresponding embeddings using CLIPViT-B32-multilingual-v1 [[4]](#4). 
+the Reference and Attribution description fields) and generating the corresponding embeddings using CLIPViT-B32-multilingual-v1 [[4]](#4).
 The use of CLIP-ViT-B32 for images and multi-lingual CLIP-ViT-B32-multilingual-v1 for text follows the protocol suggested
 [here]( https://huggingface.co/sentence-transformers/clip-ViT-B-32-multilingual-v1).
 Finally, for each query, we compute the 100 ground truth nearest neighbors using maximum inner product.
@@ -25,8 +25,7 @@ and two sets of queries, test and learn set, each with 10K vectors from the text
 
 Here is a summary of the **steps to generate this dataset**:
 
-1. **Download the WIT training Images and test set**
-
+1. **Download the WIT training Images and test set**.
 We download the training images from [here](https://storage.cloud.google.com/wikimedia-image-caption-public/image_data_train.tar) and extract them in the desired location
 > **_NOTE:_** the above link requires Google login authentication to download the training images.
 
@@ -47,7 +46,7 @@ tar -xvfz wit_v1.test.all-00000-of-00005.tsv.gz -C $BASE_PATH/test_set
    downloaded training images, test files are located.
 
 3. **Generate the ground-truth** by conducting an exhaustive search with the inner product metric.
-   We provide the ground-truth files for the query and learn sets,
+   We provide the ground-truth files for the query test and learn sets,
 
 4. Functions `read_fvecs` and `read_ivecs` can be used to read `.fvecs` and `.ivecs` files respectively.
 
