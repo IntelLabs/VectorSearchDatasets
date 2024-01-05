@@ -1,0 +1,5 @@
+sentence-transformers==2.2.2
+Pillow==9.4.0
+numpy==1.26.2
+typing_extensions==4.5.0
+natsort==8.4.0
