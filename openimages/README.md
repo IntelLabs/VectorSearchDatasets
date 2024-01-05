@@ -7,13 +7,13 @@ methods under natural data distribution shifts [[1]](#1).
 We use CLIP [[2]](#2) to generate 512-dimensional vectors from image crops of the Google's Open 
 Images dataset [[3]](#3). We use the provided class labels to organize the vectors in semantical classes
 that have different distributions, as evidenced by the 2D Principal Component Analysis projections of 
-vectors sampled from four classes (see Figure below). For example, vectors from fountain are close to 
+vectors sampled from four classes (see the figure below). For example, vectors from fountain are close to 
 those from building as these images often display buildings. Therefore, by using the provided class 
 labels, we can generate a data stream where the distribution of the embedding vectors evolves over time 
 (see [[1]](#1) for details about the simulation protocol).
 
 <p align="center">
-<img src="example_images.png" height=35% width=35%>
+<img src="example_images.png" height=30% width=30%>
 </p>
 
 The metric for similarity search used with this dataset is inner product [[2]](#2). 
