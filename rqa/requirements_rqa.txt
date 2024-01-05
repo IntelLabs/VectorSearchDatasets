@@ -1,0 +1,6 @@
+rocketqa==1.1.0
+numpy==1.26.0
+datasets==2.14.5
+typing_extensions==4.8.0
+nltk==3.8.1
+toml==0.10.2
