@@ -46,7 +46,7 @@ tar -xvfz wit_v1.test.all-00000-of-00005.tsv.gz -C $BASE_PATH/test_set
    downloaded training images, test files are located.
 
 3. **Generate the ground-truth** by conducting an exhaustive search with the inner product metric.
-   We provide the ground-truth files for the query test and learn sets,
+   We provide the ground-truth files `wit_test_gt_1M_innerproduct.ivecs` and `wit_learn_gt_1M_innerproduct.ivecs` for the test and learn sets, respectively.
 
 4. Functions `read_fvecs` and `read_ivecs` can be used to read `.fvecs` and `.ivecs` files respectively.
 
