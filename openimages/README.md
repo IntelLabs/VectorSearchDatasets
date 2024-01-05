@@ -13,7 +13,7 @@ labels, we can generate a data stream where the distribution of the embedding ve
 (see [[1]](#1) for details about the simulation protocol).
 
 <p align="center">
-<img src="./figs/example_images_small2.png" height=60% width=60%>
+<img src="example_images.png" height=60% width=60%>
 </p>
 
 The metric for similarity search used with this dataset is inner product [[2]](#2). 
