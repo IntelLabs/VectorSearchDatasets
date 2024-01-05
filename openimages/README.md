@@ -13,6 +13,7 @@ labels, we can generate a data stream where the distribution of the embedding ve
 (see [[1]](#1) for details about the simulation protocol).
 
 <p align="center">
+<img src="open_images_PCA.png" height=25% width=25%>
 <img src="example_images.png" height=30% width=30%>
 </p>
 
