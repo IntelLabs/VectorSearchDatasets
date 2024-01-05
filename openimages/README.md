@@ -22,7 +22,7 @@ The metric for similarity search used with this dataset is inner product [[2]](#
 
 ## Steps to generate the dataset
 
-The script [open-images-dataset-13M-1M.py](open-images-dataset-13M-1M.py) generates both the 
+The script [open-images-dataset-13M_1M.py](open-images-dataset-13M_1M.py) generates both the 
 13M and 1M versions of the dataset. The corresponding ground-truth files 
 (available [here](groundtruth)) are generated conducting an exhaustive 
 search with the inner product metric.
