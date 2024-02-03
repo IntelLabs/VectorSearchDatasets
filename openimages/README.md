@@ -74,7 +74,7 @@ Reference to cite when you use datasets generated with this code in a research p
 ```
 <a id="3">[1]</a>
 Aguerrebere, C.; Hildebrand M.; Bhati I.; Willke T.; Tepper M..: Locally-adaptive Quantization for Streaming Vector 
-Search. (2023) [arxiv]
+Search. (2024) [arxiv]
 
 <a id="1">[2]</a> 
 Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry, 

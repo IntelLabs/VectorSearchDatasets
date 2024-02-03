@@ -18,8 +18,8 @@ indices. In: Proceedings of the VLDB Endowment, 16, 11, 3433 - 3446. (2023)
 
 <a id="2">[2]</a>
 Aguerrebere, C.; Hildebrand M.; Bhati I.; Willke T.; Tepper M..: Locally-adaptive Quantization for Streaming Vector
-Search. (2023) [arxiv]
+Search. (2024) [arxiv]
 
 <a id="3">[3]</a>
 Tepper M.; Bhati I.; Aguerrebere, C.; Hildebrand M.; Willke T.: LeanVec: Search your vectors faster by making them fit.
-arXiv preprint arXiv:2312.16335 (2023)
+arXiv preprint arXiv:2312.16335 (2024)

@@ -81,7 +81,7 @@ In: The Journal of Machine Learning Research 21,140:1–140:67.(2020)
 
 <a id="3">[3]</a>
 Tepper M.; Bhati I.; Aguerrebere, C.; Hildebrand M.; Willke T.: LeanVec: Search your vectors faster by making them fit. 
-arXiv preprint arXiv:2312.16335 (2023)
+arXiv preprint arXiv:2312.16335 (2024)
 
 This "research quality code"  is for Non-Commercial purposes provided by Intel "As Is" without any express or implied 
 warranty of any kind. Please see the dataset's applicable license for terms and conditions. Intel does not own the 
