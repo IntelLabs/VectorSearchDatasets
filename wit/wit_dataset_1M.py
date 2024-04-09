@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # for details on the required parameters.
 
 
-    base_path = '/raid0/ishwarsi/datasets/wit'  # Path to the location of the WIT Images/Test datasets are located
+    base_path = '/export/data/datasets/wit'  # Path to the location of the WIT Images/Test datasets are located
     images_dir = f'{base_path}/image_data_train/image_pixels' # Images files directory storing *.csv.gz files
     output_dir = f'{base_path}/output' # Directory where the created dataset will be saved
 
