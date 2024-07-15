@@ -1,5 +1,5 @@
 transformers==4.36.0
-setuptools==65.5.1
+setuptools==70.0.0
 torch==2.0.1
 datasets==2.14.6
 numpy==1.25.0
