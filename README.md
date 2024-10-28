@@ -7,6 +7,7 @@ high-dimensional vectors stemming from recent deep learning models. The availabl
 * [open-images](openimages/README.md) [[2]](#2)
 * [rqa](rqa/README.md) [[3]](#3)
 * [wit](wit/README.md) [[3]](#3)
+* [wikipedia](text/README.md)
 
 Please see the details of each dataset in the respective README files.
 
