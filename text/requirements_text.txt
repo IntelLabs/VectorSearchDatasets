@@ -1,0 +1,6 @@
+datasets>=2.8.0
+numpy
+sentence_transformers>=3.0.0
+spacy
+torch
+tqdm>=4.62.2
